@@ -1,6 +1,7 @@
 package com.esimed.quizz.services;
 
 import com.esimed.quizz.models.dtos.CreateUserDTO;
+import com.esimed.quizz.models.dtos.CredentialsDTO;
 import com.esimed.quizz.models.entities.User;
 import com.esimed.quizz.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,29 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private HashPasswordService hashPasswordService;
+
     public User createUser(CreateUserDTO user) {
         User newUser = User.builder()
                 .email(user.getEmail())
-                .password(user.getPassword())
+                .password(hashPasswordService.hashPassword(user.getPassword()))
                 .username(user.getUsername())
                 .build();
 
         return userRepository.save(newUser);
+    }
+
+    public User authenticate(CredentialsDTO credentials) throws Exception {
+        User user = userRepository.findByUsername(credentials.getUsername());
+        if(user == null) {
+            throw new Exception("Informations invalides");
+        }
+
+        if(!hashPasswordService.matchPassword(credentials.getPassword(), user.getPassword())) {
+            throw new Exception("Informations invalides");
+        }
+
+        return user;
     }
 }
