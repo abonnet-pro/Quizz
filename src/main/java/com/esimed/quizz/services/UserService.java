@@ -16,7 +16,10 @@ public class UserService {
     @Autowired
     private HashPasswordService hashPasswordService;
 
-    public User createUser(CreateUserDTO user) {
+    public User createUser(CreateUserDTO user) throws Exception {
+
+        verifieInformations(user);
+
         User newUser = User.builder()
                 .email(user.getEmail())
                 .password(hashPasswordService.hashPassword(user.getPassword()))
@@ -31,11 +34,20 @@ public class UserService {
         if(user == null) {
             throw new Exception("Informations invalides");
         }
-
         if(!hashPasswordService.matchPassword(credentials.getPassword(), user.getPassword())) {
             throw new Exception("Informations invalides");
         }
 
         return user;
+    }
+
+    private void verifieInformations(CreateUserDTO user) throws Exception {
+        if(userRepository.findByUsername(user.getUsername()) != null) {
+            throw new Exception("Nom d'utilisateur déjà utilisé");
+        }
+
+        if(userRepository.findByEmail(user.getEmail()) != null) {
+            throw new Exception("Email déjà utilisé");
+        }
     }
 }

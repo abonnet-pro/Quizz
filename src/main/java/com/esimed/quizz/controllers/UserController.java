@@ -22,7 +22,7 @@ public class UserController {
     private JwtService jwtService;
 
     @PostMapping("/signup")
-    public UserInformationsDTO signup(@RequestBody CreateUserDTO user) {
+    public UserInformationsDTO signup(@RequestBody CreateUserDTO user) throws Exception {
         User newUser = userService.createUser(user);
         return UserInformationsDTO.builder()
                 .id(newUser.getId())
