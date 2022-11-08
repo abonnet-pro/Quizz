@@ -42,9 +42,4 @@ public class UserController {
                 .username(user.getUsername())
                 .build();
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
 }
