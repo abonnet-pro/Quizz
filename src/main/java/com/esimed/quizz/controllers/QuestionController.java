@@ -2,13 +2,11 @@ package com.esimed.quizz.controllers;
 
 import com.esimed.quizz.models.dtos.question.CreateQuestionDTO;
 import com.esimed.quizz.models.dtos.question.QuestionDTO;
-import com.esimed.quizz.models.entities.Question;
 import com.esimed.quizz.models.mappers.QuestionMapper;
 import com.esimed.quizz.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.stream.Collectors;
 

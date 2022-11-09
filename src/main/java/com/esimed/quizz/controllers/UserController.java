@@ -26,6 +26,7 @@ public class UserController {
         return UserInformationsDTO.builder()
                 .id(newUser.getId())
                 .token(jwtService.generateToken(newUser.getUsername()))
+                .role(newUser.getRole())
                 .email(newUser.getEmail())
                 .username(newUser.getUsername())
                 .build();
@@ -37,6 +38,7 @@ public class UserController {
         return UserInformationsDTO.builder()
                 .id(user.getId())
                 .token(jwtService.generateToken(user.getUsername()))
+                .role(user.getRole())
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .build();

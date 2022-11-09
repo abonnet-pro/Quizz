@@ -10,5 +10,5 @@ public interface QuestionMapper {
 
     QuestionMapper INSTANCE = Mappers.getMapper( QuestionMapper.class );
 
-    QuestionDTO questionToDto(Question question);
+    QuestionDTO questionToDto(Question entity);
 }

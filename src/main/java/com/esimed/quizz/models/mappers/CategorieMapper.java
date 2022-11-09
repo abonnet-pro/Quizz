@@ -10,5 +10,5 @@ public interface CategorieMapper {
 
     CategorieMapper INSTANCE = Mappers.getMapper( CategorieMapper.class );
 
-    CategorieDTO categorieToDto(Categorie categorie);
+    CategorieDTO categorieToDto(Categorie entity);
 }
