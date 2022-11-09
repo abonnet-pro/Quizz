@@ -30,7 +30,7 @@ public class QuestionService {
     public Question create(CreateQuestionDTO question) throws Exception {
         Optional<Categorie> categorie = categorieRepository.findById(question.getCategorieId());
 
-        if(categorie.isEmpty()) {
+        if(!categorie.isPresent()) {
             throw new Exception("Catégorie Invalide");
         }
 
@@ -49,7 +49,7 @@ public class QuestionService {
     public List<Question> getRandomByCategorie(Long categorieId, int number) throws Exception {
         Optional<Categorie> categorie = categorieRepository.findById(categorieId);
 
-        if(categorie.isEmpty()) {
+        if(!categorie.isPresent()) {
             throw new Exception("Catégorie Invalide");
         }
 
@@ -63,6 +63,10 @@ public class QuestionService {
             throw new Exception("Le nombre de questions demandées est supérieur au nombre de quesitons disponibles");
         }
 
+        return getRandomQuestionsOnList(questions, number);
+    }
+
+    private List<Question> getRandomQuestionsOnList(List<Question> questions, int number) {
         Random rand = new Random();
         List<Question> randomQuestions = new ArrayList<>();
         for (int i = 0; i < number; i++) {

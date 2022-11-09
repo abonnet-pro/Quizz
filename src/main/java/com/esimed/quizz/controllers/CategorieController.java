@@ -20,8 +20,7 @@ public class CategorieController {
     private CategorieService categorieService;
 
     @GetMapping("all")
-    public List<Categorie> findAll() {
-        return categorieService.findAll();
-//        return categorieService.findAll().stream().map(CategorieMapper.INSTANCE::categorieToDto).collect(Collectors.toList());
+    public List<CategorieDTO> findAll() {
+        return categorieService.findAll().stream().map(CategorieMapper.INSTANCE::categorieToDto).collect(Collectors.toList());
     }
 }
