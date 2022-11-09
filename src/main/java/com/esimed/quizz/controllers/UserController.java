@@ -1,13 +1,12 @@
 package com.esimed.quizz.controllers;
 
-import com.esimed.quizz.models.dtos.CreateUserDTO;
-import com.esimed.quizz.models.dtos.CredentialsDTO;
-import com.esimed.quizz.models.dtos.UserInformationsDTO;
+import com.esimed.quizz.models.dtos.user.CreateUserDTO;
+import com.esimed.quizz.models.dtos.user.CredentialsDTO;
+import com.esimed.quizz.models.dtos.user.UserInformationsDTO;
 import com.esimed.quizz.models.entities.User;
 import com.esimed.quizz.services.JwtService;
 import com.esimed.quizz.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

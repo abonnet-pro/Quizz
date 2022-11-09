@@ -1,4 +1,4 @@
-package com.esimed.quizz.models.dtos;
+package com.esimed.quizz.models.dtos.user;
 
 import lombok.*;
 

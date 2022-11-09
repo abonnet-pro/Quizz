@@ -1,8 +1,9 @@
 package com.esimed.quizz.services;
 
-import com.esimed.quizz.models.dtos.CreateUserDTO;
-import com.esimed.quizz.models.dtos.CredentialsDTO;
+import com.esimed.quizz.models.dtos.user.CreateUserDTO;
+import com.esimed.quizz.models.dtos.user.CredentialsDTO;
 import com.esimed.quizz.models.entities.User;
+import com.esimed.quizz.models.enums.Role;
 import com.esimed.quizz.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class UserService {
                 .email(user.getEmail())
                 .password(hashPasswordService.hashPassword(user.getPassword()))
                 .username(user.getUsername())
+                .role(Role.JOUEUR)
                 .build();
 
         return userRepository.save(newUser);

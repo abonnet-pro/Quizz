@@ -1,6 +1,5 @@
 package com.esimed.quizz.models.entities;
 
-import com.esimed.quizz.models.enums.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,8 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="user_account")
-public class User {
+@Table(name="question")
+public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +23,19 @@ public class User {
     @Column(name="updated")
     private LocalDateTime updated;
 
-    @Column(name="email")
-    private String email;
-    @Column(name="password")
-    private String password;
-    @Column(name="username")
-    private String username;
-    @Column(name="role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(name="description")
+    private String description;
+    @ManyToOne
+    @JoinColumn(name="categorie_id")
+    private Categorie categorie;
+    @Column(name="reponse_1")
+    private String reponse1;
+    @Column(name="reponse_2")
+    private String reponse2;
+    @Column(name="reponse_3")
+    private String reponse3;
+    @Column(name="reponse_4")
+    private String reponse4;
 
     @PrePersist
     public void onPrePersit() {

@@ -2,7 +2,6 @@ package com.esimed.quizz.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import lombok.Value;
 import org.springframework.stereotype.Service;
 
 import static com.esimed.quizz.security.JWTAuthorizationFilter.TOKEN_PREFIX;
