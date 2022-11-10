@@ -9,4 +9,3 @@ insert into categorie (name, created)  values ('Télévision', now());
 insert into categorie (name, created)  values ('Art', now());
 insert into categorie (name, created)  values ('Animaux', now());
 insert into categorie (name, created)  values ('Sport', now());
-

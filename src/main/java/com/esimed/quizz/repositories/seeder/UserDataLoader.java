@@ -31,6 +31,14 @@ public class UserDataLoader implements CommandLineRunner {
                     .password(hashPasswordService.hashPassword("admin"))
                     .build();
             userRepository.save(admin);
+
+            User joueur = User.builder()
+                    .role(Role.JOUEUR)
+                    .username("joueur")
+                    .email("joueur@joueur.fr")
+                    .password(hashPasswordService.hashPassword("joueur"))
+                    .build();
+            userRepository.save(admin);
         }
     }
 }
