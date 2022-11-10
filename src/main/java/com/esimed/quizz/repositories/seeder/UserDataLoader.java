@@ -38,7 +38,7 @@ public class UserDataLoader implements CommandLineRunner {
                     .email("joueur@joueur.fr")
                     .password(hashPasswordService.hashPassword("joueur"))
                     .build();
-            userRepository.save(admin);
+            userRepository.save(joueur);
         }
     }
 }

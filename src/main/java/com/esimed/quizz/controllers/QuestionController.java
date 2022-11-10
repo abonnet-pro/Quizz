@@ -20,6 +20,7 @@ public class QuestionController {
     private QuestionService questionService;
 
     @GetMapping("all")
+    @RolesAllowed("ADMIN")
     public List<QuestionDTO> findAll() {
         return questionService.findAll().stream().map(QuestionMapper.INSTANCE::questionToDto).collect(Collectors.toList());
     }
