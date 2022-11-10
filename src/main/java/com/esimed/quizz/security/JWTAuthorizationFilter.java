@@ -25,9 +25,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final IUserService userService;
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager, IUserService userService) {
+    private final JwtService jwtService;
+
+    public JWTAuthorizationFilter(AuthenticationManager authManager, IUserService userService, JwtService jwtService) {
         super(authManager);
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
 
         if (token != null) {
-            String username = JwtService.getUsernameByToken(token);
+            String username = jwtService.getUsernameByToken(token);
 
             if (username != null) {
                 User user = userService.getByUsername(username);

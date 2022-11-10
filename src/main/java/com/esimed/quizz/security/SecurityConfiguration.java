@@ -1,11 +1,8 @@
 package com.esimed.quizz.security;
 
-import com.esimed.quizz.models.enums.Role;
-import com.esimed.quizz.repositories.UserRepository;
 import com.esimed.quizz.services.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.esimed.quizz.services.JwtService;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,9 +20,12 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final IUserService userService;
 
-    public SecurityConfiguration(IUserService userService)
+    private final JwtService jwtService;
+
+    public SecurityConfiguration(IUserService userService, JwtService jwtService)
     {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -38,7 +38,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signin").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), userService))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), userService, jwtService))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }
