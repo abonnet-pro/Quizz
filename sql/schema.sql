@@ -75,3 +75,4 @@ create table if not exists score
 
 alter table score
     owner to postgres;
+

@@ -5,7 +5,6 @@ import com.esimed.quizz.models.entities.Categorie;
 import com.esimed.quizz.models.entities.Question;
 import com.esimed.quizz.repositories.CategorieRepository;
 import com.esimed.quizz.repositories.QuestionRepository;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +26,26 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
+    public List<Question> findAllByCategorie(Long id) throws Exception {
+        Optional<Categorie> categorie = categorieRepository.findById(id);
+
+        if(!categorie.isPresent()) {
+            throw new Exception("Categorie invalide");
+        }
+
+        return questionRepository.findAllByCategorie(categorie.get());
+    }
+
+    public void delete(Long id) throws Exception {
+        Optional<Question> question = questionRepository.findById(id);
+
+        if(!question.isPresent()) {
+            throw new Exception("Question Invalide");
+        }
+
+        questionRepository.delete(question.get());
+    }
+
     public Question create(CreateQuestionDTO question) throws Exception {
         Optional<Categorie> categorie = categorieRepository.findById(question.getCategorieId());
 
@@ -44,6 +63,29 @@ public class QuestionService {
                 .build();
 
         return questionRepository.save(newQuestion);
+    }
+
+    public Question update(Long id, CreateQuestionDTO newQuestion) throws Exception {
+        Optional<Categorie> optCategorie = categorieRepository.findById(newQuestion.getCategorieId());
+
+        if(!optCategorie.isPresent()) {
+            throw new Exception("Catégorie Invalide");
+        }
+
+        Optional<Question> optQuestion = questionRepository.findById(id);
+
+        if(!optQuestion.isPresent()) {
+            throw new Exception("Question Invalide");
+        }
+
+        Question question = optQuestion.get();
+        question.setDescription(newQuestion.getDescription());
+        question.setReponse1(newQuestion.getReponse1());
+        question.setReponse2(newQuestion.getReponse2());
+        question.setReponse3(newQuestion.getReponse3());
+        question.setReponse4(newQuestion.getReponse4());
+
+        return questionRepository.save(question);
     }
 
     public List<Question> getRandomByCategorie(Long categorieId, int number) throws Exception {

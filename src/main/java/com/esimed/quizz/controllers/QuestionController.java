@@ -25,10 +25,29 @@ public class QuestionController {
         return questionService.findAll().stream().map(QuestionMapper.INSTANCE::questionToDto).collect(Collectors.toList());
     }
 
+    @GetMapping("categorie/{id}")
+    @RolesAllowed("ADMIN")
+    public List<QuestionDTO> findAllByCategorie(@PathVariable("id") Long id) throws Exception {
+        return questionService.findAllByCategorie(id).stream().map(QuestionMapper.INSTANCE::questionToDto).collect(Collectors.toList());
+    }
+
+
     @PostMapping("")
     @RolesAllowed("ADMIN")
     public QuestionDTO create(@RequestBody CreateQuestionDTO question) throws Exception {
         return QuestionMapper.INSTANCE.questionToDto(questionService.create(question));
+    }
+
+    @DeleteMapping("{id}")
+    @RolesAllowed("ADMIN")
+    public void delete(@PathVariable("id") Long id) throws Exception {
+        questionService.delete(id);
+    }
+
+    @PutMapping("{id}")
+    @RolesAllowed("ADMIN")
+    public QuestionDTO update(@PathVariable("id") Long id, @RequestBody CreateQuestionDTO question) throws Exception {
+        return QuestionMapper.INSTANCE.questionToDto(questionService.update(id, question));
     }
 
     @GetMapping("random/categorie/{id}")
