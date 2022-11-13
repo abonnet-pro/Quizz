@@ -41,4 +41,16 @@ public class CategorieController {
     public List<CategorieDTO> findAllAvailable() {
         return categorieService.findAllAvailable().stream().map(CategorieMapper.INSTANCE::categorieToDto).collect(Collectors.toList());
     }
+
+    @DeleteMapping("{id}")
+    @RolesAllowed("ADMIN")
+    public void deleteCategorie(@PathVariable("id") Long id) throws Exception {
+        categorieService.deleteCategorie(id);
+    }
+
+    @PostMapping("")
+    @RolesAllowed("ADMIN")
+    public CategorieDTO createCategorie(@RequestBody String name) {
+        return CategorieMapper.INSTANCE.categorieToDto(categorieService.createCategorie(name));
+    }
 }

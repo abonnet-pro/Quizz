@@ -4,6 +4,7 @@ import com.esimed.quizz.models.dtos.categorie.CategorieQuestionsDTO;
 import com.esimed.quizz.models.entities.Categorie;
 import com.esimed.quizz.repositories.CategorieRepository;
 import com.esimed.quizz.repositories.QuestionRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +50,23 @@ public class CategorieService {
                 .name(categorie.getName())
                 .nbQuestions(questionRepository.findAllByCategorie(categorie).size())
                 .build();
+    }
+
+    public void deleteCategorie(Long id) throws Exception {
+        Optional<Categorie> optCategorie = categorieRepository.findById(id);
+
+        if(!optCategorie.isPresent()) {
+            throw new Exception("Categorie invalide");
+        }
+
+        categorieRepository.delete(optCategorie.get());
+    }
+
+    public Categorie createCategorie(String name) {
+        Categorie categorie = Categorie.builder()
+                .name(StringUtils.chop(name))
+                .build();
+
+        return categorieRepository.save(categorie);
     }
 }

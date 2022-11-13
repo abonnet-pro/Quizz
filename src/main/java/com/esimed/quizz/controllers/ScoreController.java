@@ -33,4 +33,9 @@ public class ScoreController {
     public List<ScoreDTO> getLadder(@RequestParam(name = "categorie", required = false) Long categorieId) throws Exception {
         return scoreService.getLadder(categorieId).stream().map(ScoreMapper.INSTANCE::scoreToDto).collect(Collectors.toList());
     }
+
+    @GetMapping("user/{id}")
+    public ScoreDTO getScore(@PathVariable("id") Long id) throws Exception {
+        return ScoreMapper.INSTANCE.scoreToDto(scoreService.getScore(id));
+    }
 }

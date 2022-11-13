@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -25,6 +26,8 @@ public class Categorie {
 
     @Column(name="name")
     private String name;
+    @OneToMany(mappedBy = "categorie", cascade = CascadeType.REMOVE)
+    private Set<Question> questions;
 
     @PrePersist
     public void onPrePersit() {

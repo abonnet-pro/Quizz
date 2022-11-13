@@ -80,6 +80,22 @@ public class ScoreService {
         return scoreRepository.findAllByCategorie(categorie.get());
     }
 
+    public Score getScore(Long userId) throws Exception {
+        Optional<User> optUser = userRepository.findById(userId);
+
+        if(!optUser.isPresent()) {
+            throw new Exception("Utilisateur invalide");
+        }
+
+        Score score = scoreRepository.findByUser(optUser.get());
+
+        if(score == null) {
+            score = Score.builder().user(optUser.get()).build();
+        }
+
+        return score;
+    }
+
     private Score buildDefautScore(Categorie categorie, User user) {
         return Score.builder()
                 .categorie(categorie)
