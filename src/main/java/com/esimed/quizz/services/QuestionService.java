@@ -17,6 +17,7 @@ import com.esimed.quizz.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -136,6 +137,7 @@ public class QuestionService {
         return randomQuestions;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public ValideQuestionDTO valideQuestion(Long questionId, ReponseQuestionDTO reponse) throws Exception {
         Optional<Question> optQuestion = questionRepository.findById(questionId);
 
