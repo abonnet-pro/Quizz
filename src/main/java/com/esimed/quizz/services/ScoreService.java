@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ScoreService {
@@ -69,7 +69,7 @@ public class ScoreService {
 
     public List<Score> getLadder(Long categorieId) throws Exception {
         if(categorieId == null) {
-            return scoreRepository.findAll();
+            return sortByScore(scoreRepository.findAll());
         }
 
         Optional<Categorie> categorie = categorieRepository.findById(categorieId);
@@ -77,7 +77,13 @@ public class ScoreService {
             throw new Exception("Categorie invalide");
         }
 
-        return scoreRepository.findAllByCategorie(categorie.get());
+        return sortByScore(scoreRepository.findAllByCategorie(categorie.get()));
+    }
+
+    private List<Score> sortByScore(List<Score> scores) {
+        return scores.stream()
+                .sorted(Comparator.comparingInt(Score::getScore).reversed())
+                .collect(Collectors.toList());
     }
 
     public Score getScore(Long userId) throws Exception {
