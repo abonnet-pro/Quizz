@@ -144,13 +144,13 @@ public class ScoreService {
                 .build();
     }
 
-    public Score updateScore(Score score, TermineQuestionDTO reponse) {
+    public void updateScore(Score score, TermineQuestionDTO reponse) {
         if(score.getScore() == 0 && !reponse.isSuccess()) {
-            return score;
+            return;
         }
 
         score.setScore(reponse.isSuccess() ? score.getScore() + 1 : score.getScore() - 1 );
-        return score;
+        scoreRepository.save(score);
     }
 
     public Score updateScore(Score score, TermineQuizzDTO resultat) {

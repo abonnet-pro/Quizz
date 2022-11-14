@@ -166,7 +166,7 @@ public class QuestionService {
         scoreService.updateScore(score, termineQuestion);
 
         return ValideQuestionDTO.builder()
-                .success(reponse.getReponse().equals(question.getReponse1()))
+                .success(success)
                 .bonneReponse(question.getReponse1())
                 .score(ScoreMapper.INSTANCE.scoreToDto(scoreService.getScore(user.getId())))
                 .build();
