@@ -161,11 +161,12 @@ public class QuestionService {
                 .success(success)
                 .build();
 
-        Score scoreUpdated = scoreService.updateScore(score, termineQuestion);
+        scoreService.updateScore(score, termineQuestion);
 
         return ValideQuestionDTO.builder()
                 .success(reponse.getReponse().equals(question.getReponse1()))
-                .score(ScoreMapper.INSTANCE.scoreToDto(scoreUpdated))
+                .bonneReponse(question.getReponse1())
+                .score(ScoreMapper.INSTANCE.scoreToDto(scoreService.getScore(user.getId())))
                 .build();
     }
 }

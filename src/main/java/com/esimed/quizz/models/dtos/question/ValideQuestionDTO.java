@@ -10,5 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ValideQuestionDTO {
     public boolean success;
+    public String bonneReponse;
     public ScoreDTO score;
 }
