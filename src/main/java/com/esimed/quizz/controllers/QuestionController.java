@@ -2,7 +2,8 @@ package com.esimed.quizz.controllers;
 
 import com.esimed.quizz.models.dtos.question.CreateQuestionDTO;
 import com.esimed.quizz.models.dtos.question.QuestionDTO;
-import com.esimed.quizz.models.enums.Role;
+import com.esimed.quizz.models.dtos.question.ReponseQuestionDTO;
+import com.esimed.quizz.models.dtos.question.ValideQuestionDTO;
 import com.esimed.quizz.models.mappers.QuestionMapper;
 import com.esimed.quizz.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,10 @@ public class QuestionController {
     @GetMapping("random/categorie/{id}")
     public List<QuestionDTO> getRandomByCategorie(@PathVariable("id") Long categorieId, @RequestParam("number") int number) throws Exception {
         return questionService.getRandomByCategorie(categorieId, number).stream().map(QuestionMapper.INSTANCE::questionToDto).collect(Collectors.toList());
+    }
+
+    @PostMapping("{id}/valide")
+    public ValideQuestionDTO valideQuestion(@PathVariable("id") Long id, @RequestBody ReponseQuestionDTO reponse) throws Exception {
+        return questionService.valideQuestion(id, reponse);
     }
 }

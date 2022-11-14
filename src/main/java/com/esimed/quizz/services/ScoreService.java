@@ -1,5 +1,6 @@
 package com.esimed.quizz.services;
 
+import com.esimed.quizz.models.dtos.score.ScoreDTO;
 import com.esimed.quizz.models.dtos.score.TermineQuestionDTO;
 import com.esimed.quizz.models.dtos.score.TermineQuizzDTO;
 import com.esimed.quizz.models.entities.Categorie;
@@ -28,26 +29,6 @@ public class ScoreService {
     private UserRepository userRepository;
 
     @Transactional(rollbackOn = Exception.class)
-    public Score termineQuestion(TermineQuestionDTO reponse) throws Exception {
-        Optional<Categorie> categorie = categorieRepository.findById(reponse.getCategorieId());
-        if(!categorie.isPresent()) {
-            throw new Exception("Categorie invalide");
-        }
-
-        Optional<User> user = userRepository.findById(reponse.getUserId());
-        if(!user.isPresent()) {
-            throw new Exception("Utilisateur invalide");
-        }
-
-        Score score = scoreRepository.findByCategorieAndUser(categorie.get(), user.get());
-        if(score == null) {
-            score = buildDefautScore(categorie.get(), user.get());
-        }
-
-        return updateScore(score, reponse);
-    }
-
-    @Transactional(rollbackOn = Exception.class)
     public Score termineQuizz(TermineQuizzDTO resultat) throws Exception {
         Optional<Categorie> categorie = categorieRepository.findById(resultat.getCategorieId());
         if(!categorie.isPresent()) {
@@ -69,7 +50,14 @@ public class ScoreService {
 
     public List<Score> getLadder(Long categorieId) throws Exception {
         if(categorieId == null) {
-            return sortByScore(scoreRepository.findAll());
+            List<Long> ids = scoreRepository.findAllAvailable();
+            return sortByScore(ids.stream().map(i -> {
+                try {
+                    return getScore(i);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList()));
         }
 
         Optional<Categorie> categorie = categorieRepository.findById(categorieId);
@@ -93,16 +81,59 @@ public class ScoreService {
             throw new Exception("Utilisateur invalide");
         }
 
-        Score score = scoreRepository.findByUser(optUser.get());
+        List<Score> scores = scoreRepository.findAllByUser(optUser.get());
+
+        int scoreTotal = 0;
+        int nbMedailleOrTotal = 0;
+        int nbMedailleArgentTotal = 0;
+        int nbMedailleBronzeTotal = 0;
+
+        if(scores.isEmpty()) {
+            return Score.builder().user(optUser.get()).build();
+        }
+
+        for(Score s : scores) {
+            scoreTotal += s.getScore();
+            nbMedailleOrTotal += s.getNbMedailleOr();
+            nbMedailleArgentTotal += s.getNbMedailleArgent();
+            nbMedailleBronzeTotal += s.getNbMedailleBronze();
+        }
+
+        return Score.builder()
+                .user(optUser.get())
+                .score(scoreTotal)
+                .nbMedailleOr(nbMedailleOrTotal)
+                .nbMedailleArgent(nbMedailleArgentTotal)
+                .nbMedailleBronze(nbMedailleBronzeTotal)
+                .build();
+    }
+
+    public Score getScore(Long userId, Long categorieId) throws Exception {
+        Optional<User> optUser = userRepository.findById(userId);
+
+        if(!optUser.isPresent()) {
+            throw new Exception("Utilisateur invalide");
+        }
+
+        Optional<Categorie> optCategorie = categorieRepository.findById(categorieId);
+
+        if(!optCategorie.isPresent()) {
+            throw new Exception("Categorie invalide");
+        }
+
+        Score score = scoreRepository.findByCategorieAndUser(optCategorie.get(), optUser.get());
 
         if(score == null) {
-            score = Score.builder().user(optUser.get()).build();
+            score = Score.builder()
+                    .categorie(optCategorie.get())
+                    .user(optUser.get())
+                    .build();
         }
 
         return score;
     }
 
-    private Score buildDefautScore(Categorie categorie, User user) {
+    public Score buildDefautScore(Categorie categorie, User user) {
         return Score.builder()
                 .categorie(categorie)
                 .user(user)
@@ -113,7 +144,7 @@ public class ScoreService {
                 .build();
     }
 
-    private Score updateScore(Score score, TermineQuestionDTO reponse) {
+    public Score updateScore(Score score, TermineQuestionDTO reponse) {
         if(score.getScore() == 0 && !reponse.isSuccess()) {
             return score;
         }
@@ -122,7 +153,7 @@ public class ScoreService {
         return score;
     }
 
-    private Score updateScore(Score score, TermineQuizzDTO resultat) {
+    public Score updateScore(Score score, TermineQuizzDTO resultat) {
         score.setNbMedailleOr(resultat.isMedailleOr() ? score.getNbMedailleOr() + 1 : score.getNbMedailleOr());
         score.setNbMedailleArgent(resultat.isMedailleArgent() ? score.getNbMedailleArgent() + 1 : score.getNbMedailleArgent());
         score.setNbMedailleBronze(resultat.isMedailleBronze() ? score.getNbMedailleBronze() + 1 : score.getNbMedailleBronze());

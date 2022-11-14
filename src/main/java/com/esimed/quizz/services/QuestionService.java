@@ -1,10 +1,19 @@
 package com.esimed.quizz.services;
 
 import com.esimed.quizz.models.dtos.question.CreateQuestionDTO;
+import com.esimed.quizz.models.dtos.question.ReponseQuestionDTO;
+import com.esimed.quizz.models.dtos.question.ValideQuestionDTO;
+import com.esimed.quizz.models.dtos.score.ScoreDTO;
+import com.esimed.quizz.models.dtos.score.TermineQuestionDTO;
 import com.esimed.quizz.models.entities.Categorie;
 import com.esimed.quizz.models.entities.Question;
+import com.esimed.quizz.models.entities.Score;
+import com.esimed.quizz.models.entities.User;
+import com.esimed.quizz.models.mappers.ScoreMapper;
 import com.esimed.quizz.repositories.CategorieRepository;
 import com.esimed.quizz.repositories.QuestionRepository;
+import com.esimed.quizz.repositories.ScoreRepository;
+import com.esimed.quizz.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +30,12 @@ public class QuestionService {
 
     @Autowired
     private CategorieRepository categorieRepository;
+
+    @Autowired
+    private ScoreService scoreService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Question> findAll() {
         return questionRepository.findAll();
@@ -119,5 +134,38 @@ public class QuestionService {
         }
 
         return randomQuestions;
+    }
+
+    public ValideQuestionDTO valideQuestion(Long questionId, ReponseQuestionDTO reponse) throws Exception {
+        Optional<Question> optQuestion = questionRepository.findById(questionId);
+
+        if(!optQuestion.isPresent()) {
+            throw new Exception("Quesiton invalide");
+        }
+
+        Optional<User> optUser = userRepository.findById(reponse.getUserId());
+
+        if(!optUser.isPresent()) {
+            throw new Exception("Utilisateur invalide");
+        }
+
+        Question question = optQuestion.get();
+        User user = optUser.get();
+
+        Score score = scoreService.getScore(reponse.getUserId(), question.getCategorie().getId());
+        boolean success = question.getReponse1().equals(reponse.getReponse());
+
+        TermineQuestionDTO termineQuestion = TermineQuestionDTO.builder()
+                .categorieId(question.getCategorie().getId())
+                .userId(user.getId())
+                .success(success)
+                .build();
+
+        Score scoreUpdated = scoreService.updateScore(score, termineQuestion);
+
+        return ValideQuestionDTO.builder()
+                .success(reponse.getReponse().equals(question.getReponse1()))
+                .score(ScoreMapper.INSTANCE.scoreToDto(scoreUpdated))
+                .build();
     }
 }

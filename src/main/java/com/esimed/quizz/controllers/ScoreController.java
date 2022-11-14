@@ -19,11 +19,6 @@ public class ScoreController {
     @Autowired
     private ScoreService scoreService;
 
-    @PostMapping("termine/question")
-    public ScoreDTO termineQuestion(@RequestBody TermineQuestionDTO reponse) throws Exception {
-        return ScoreMapper.INSTANCE.scoreToDto(scoreService.termineQuestion(reponse));
-    }
-
     @PostMapping("termine/quizz")
     public ScoreDTO termineQuizz(@RequestBody TermineQuizzDTO resultat) throws Exception {
         return ScoreMapper.INSTANCE.scoreToDto(scoreService.termineQuizz(resultat));
