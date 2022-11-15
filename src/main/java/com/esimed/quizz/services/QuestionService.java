@@ -18,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -121,7 +119,36 @@ public class QuestionService {
             throw new Exception("Le nombre de questions demandées est supérieur au nombre de quesitons disponibles");
         }
 
-        return getRandomQuestionsOnList(questions, number);
+        return getRandomQuestionsOnList(questions, number).stream().map(this::randomizeReponseOnQuestion).collect(Collectors.toList());
+    }
+
+    private Question randomizeReponseOnQuestion(Question question) {
+        Random rand = new Random();
+        int randomIndex;
+        String reponse;
+        List<String> reponses = new ArrayList<>(Arrays.asList(question.getReponse1(), question.getReponse2(), question.getReponse3(), question.getReponse4()));
+
+        randomIndex = rand.nextInt(reponses.size());
+        reponse = reponses.get(randomIndex);
+        question.setReponse1(reponse);
+        reponses.remove(randomIndex);
+
+        randomIndex = rand.nextInt(reponses.size());
+        reponse = reponses.get(randomIndex);
+        question.setReponse2(reponse);
+        reponses.remove(randomIndex);
+
+        randomIndex = rand.nextInt(reponses.size());
+        reponse = reponses.get(randomIndex);
+        question.setReponse3(reponse);
+        reponses.remove(randomIndex);
+
+        randomIndex = rand.nextInt(reponses.size());
+        reponse = reponses.get(randomIndex);
+        question.setReponse4(reponse);
+        reponses.remove(randomIndex);
+
+        return question;
     }
 
     private List<Question> getRandomQuestionsOnList(List<Question> questions, int number) {
