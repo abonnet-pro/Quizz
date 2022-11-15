@@ -1,6 +1,5 @@
 package com.esimed.quizz.services;
 
-import com.esimed.quizz.models.dtos.score.ScoreDTO;
 import com.esimed.quizz.models.dtos.score.TermineQuestionDTO;
 import com.esimed.quizz.models.dtos.score.TermineQuizzDTO;
 import com.esimed.quizz.models.entities.Categorie;
@@ -45,7 +44,9 @@ public class ScoreService {
             score = buildDefautScore(categorie.get(), user.get());
         }
 
-        return updateScore(score, resultat);
+        updateScore(score, resultat);
+
+        return getScore(user.get().getId());
     }
 
     public List<Score> getLadder(Long categorieId) throws Exception {
@@ -153,10 +154,10 @@ public class ScoreService {
         scoreRepository.save(score);
     }
 
-    public Score updateScore(Score score, TermineQuizzDTO resultat) {
+    public void updateScore(Score score, TermineQuizzDTO resultat) {
         score.setNbMedailleOr(resultat.isMedailleOr() ? score.getNbMedailleOr() + 1 : score.getNbMedailleOr());
         score.setNbMedailleArgent(resultat.isMedailleArgent() ? score.getNbMedailleArgent() + 1 : score.getNbMedailleArgent());
         score.setNbMedailleBronze(resultat.isMedailleBronze() ? score.getNbMedailleBronze() + 1 : score.getNbMedailleBronze());
-        return score;
+        scoreRepository.save(score);
     }
 }
