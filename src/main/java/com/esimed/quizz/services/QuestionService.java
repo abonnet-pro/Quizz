@@ -102,6 +102,23 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
+    public List<Question> getByCategorie(Long categorieId) throws Exception {
+        Optional<Categorie> categorie = categorieRepository.findById(categorieId);
+
+        if(!categorie.isPresent()) {
+            throw new Exception("Catégorie Invalide");
+        }
+
+        List<Question> questions = questionRepository.findFirst10ByCategorie(categorie.get());
+
+        if(questions.isEmpty()) {
+            throw new Exception("Aucune questions disponibles");
+        }
+
+        return questions.stream().map(this::randomizeReponseOnQuestion).collect(Collectors.toList());
+    }
+
+
     public List<Question> getRandomByCategorie(Long categorieId, int number) throws Exception {
         Optional<Categorie> categorie = categorieRepository.findById(categorieId);
 

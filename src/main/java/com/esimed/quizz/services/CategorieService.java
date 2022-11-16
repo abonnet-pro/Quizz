@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +39,13 @@ public class CategorieService {
 
     public List<Categorie> findAllAvailable() {
         return categorieRepository.findAllAvailable();
+    }
+
+    public Categorie findRandomCategorieAvailable() {
+        Random random = new Random();
+        List<Categorie> categories = categorieRepository.findAllAvailable();
+        int randomIndex = random.nextInt(categories.size());
+        return categories.get(randomIndex);
     }
 
     public List<CategorieQuestionsDTO> findAllWithQuestions() {

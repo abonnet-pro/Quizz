@@ -8,8 +8,12 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ValideQuestionDTO {
+public class ValideMultiplayerQuestionDTO {
     private boolean success;
     private String bonneReponse;
+    private String reponseSender;
     private ScoreDTO score;
+    private String username;
+    private String repondant;
+    private String winner;
 }

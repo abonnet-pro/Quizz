@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReponseQuestionDTO {
-    public Long userId;
-    public String reponse;
+    private Long userId;
+    private String reponse;
 }

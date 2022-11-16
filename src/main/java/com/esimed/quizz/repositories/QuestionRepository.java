@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findAllByCategorie(Categorie categorie);
+
+    List<Question> findFirst10ByCategorie(Categorie categorie);
 }
