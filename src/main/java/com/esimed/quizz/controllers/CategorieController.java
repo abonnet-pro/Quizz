@@ -7,10 +7,17 @@ import com.esimed.quizz.models.entities.Categorie;
 import com.esimed.quizz.models.mappers.CategorieMapper;
 import com.esimed.quizz.models.mappers.QuestionMapper;
 import com.esimed.quizz.services.CategorieService;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,4 +60,6 @@ public class CategorieController {
     public CategorieDTO createCategorie(@RequestBody String name) {
         return CategorieMapper.INSTANCE.categorieToDto(categorieService.createCategorie(name));
     }
+
+
 }
